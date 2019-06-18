@@ -2,6 +2,7 @@ package com.itis.libs.examples;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -96,6 +97,10 @@ public class Main extends AppCompatActivity {
             e.printStackTrace();
         }
 
+
+    }
+
+    void hideButton(){
 
     }
 }
