@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
  * Defines a simple generic BaseAdapter for an android {@link AdapterView}
  * that can be loaded with data continuously when the {@link AdapterView}
  * is scrolled to the bottom.
+ *
  * @param <T> A generic class type for the data to be rendered in this {@link android.widget.Adapter}
  */
 public abstract class EndlessAdapter<T> extends BaseAdapter {
@@ -22,10 +23,9 @@ public abstract class EndlessAdapter<T> extends BaseAdapter {
     /**
      * If true, the last call that was made for data via {@link EndlessAdapter#loadMoreItems(List, AdapterView)}
      * returned data from the server.
-     *
+     * <p>
      * We set it to true by default to reflect our calm optimism
      * about data sources ability to at least have 1 unit of data by default, in general...lol
-     *
      */
     private boolean srcHadItemsAtLastCall = true;
 
@@ -33,7 +33,6 @@ public abstract class EndlessAdapter<T> extends BaseAdapter {
 
 
     private boolean atBottom;
-
 
 
     @Override
@@ -55,9 +54,10 @@ public abstract class EndlessAdapter<T> extends BaseAdapter {
     /**
      * SUBCLASSES MUST ALWAYS CALL THIS METHOD AT THE BOTTOM OF THEIR
      * {@link EndlessAdapter#getView(int, View, ViewGroup)} IMPLEMENTATION.
-     * @param position The position of the data of the view to be generated in the adapter
+     *
+     * @param position    The position of the data of the view to be generated in the adapter
      * @param convertView The view to be generated
-     * @param parent The parent of the view to be generated.
+     * @param parent      The parent of the view to be generated.
      * @return the generated view.
      */
     @Override
@@ -67,17 +67,17 @@ public abstract class EndlessAdapter<T> extends BaseAdapter {
 
         int lastVisiblePosition = adapterView.getLastVisiblePosition();
         int count = items.size();
-        if(position == count - 1 || lastVisiblePosition == count - 1){
-            if(!busyLoading) {
+        if (position == count - 1 || lastVisiblePosition == count - 1) {
+            if (!busyLoading) {
                 busyLoading = true;
-                onScrollToBottom(position , srcHadItemsAtLastCall);
-                if(!srcHadItemsAtLastCall){//The server call will trigger loadMoreItems which will set busyLoading to false if srcHadItemsAtLastCall = true.
-                    busyLoading=false;
+                onScrollToBottom(position, srcHadItemsAtLastCall);
+                if (!srcHadItemsAtLastCall) {//The server call will trigger loadMoreItems which will set busyLoading to false if srcHadItemsAtLastCall = true.
+                    busyLoading = false;
                 }
                 atBottom = true;
             }
-        }else if(position < count - 1){
-            if(atBottom){
+        } else if (position < count - 1) {
+            if (atBottom) {
                 onScrollAwayFromBottom(position);
             }
             atBottom = false;
@@ -101,8 +101,6 @@ public abstract class EndlessAdapter<T> extends BaseAdapter {
     }
 
 
-
-
     public void add(List<T> modelData) {
 
         for (T t : modelData) {
@@ -122,18 +120,18 @@ public abstract class EndlessAdapter<T> extends BaseAdapter {
     }
 
 
-
     /**
      * This method MUST be the only way to add more items to the list
      * ESPECIALLY when the list is being updated by being scrolled to the bottom.
+     *
      * @param moreItems A list of more items to add to the adapter
      */
-    public void loadMoreItems(final @Nullable List<T> moreItems , final AdapterView parent) {
+    public void loadMoreItems(final @Nullable List<T> moreItems, final AdapterView parent) {
 
         boolean updateDidCome = moreItems != null && !moreItems.isEmpty();
         final int lastVisible = parent.getLastVisiblePosition();
 
-        if(updateDidCome) {
+        if (updateDidCome) {
             srcHadItemsAtLastCall = true;
             this.items.addAll(moreItems);
             notifyDataSetChanged();
@@ -145,43 +143,44 @@ public abstract class EndlessAdapter<T> extends BaseAdapter {
                 @Override
                 public void run() {
                     parent.setSelection(lastVisible);
-                    onFinishedLoading(true );
-                    busyLoading=false;
+                    onFinishedLoading(true);
+                    busyLoading = false;
                 }
             });
 
 
-        }else{//No updates.
-            onFinishedLoading(false );
-            busyLoading=false;
+        } else {//No updates.
+            onFinishedLoading(false);
+            busyLoading = false;
             srcHadItemsAtLastCall = false;
         }
 
 
     }
 
-    public void clear(){
+    public void clear() {
         this.items.clear();
         this.notifyDataSetChanged();
     }
 
     /**
-     *
-     * @param bottomIndex The index of the last item.
+     * @param bottomIndex               The index of the last item.
      * @param moreItemsCouldBeAvailable If true, the server or other source of data has not yet reported to this
-     *                   adapter that it has no data again. So the user can call for more data
-     *                   here. If false, the last time the server was contacted, there was no data
-     *                   available.
-     *                   Spontaneous or timed calls to the server or other source for more data should
-     *                   only be made if this parameter is true. If false, no calls should be made to the server
+     *                                  adapter that it has no data again. So the user can call for more data
+     *                                  here. If false, the last time the server was contacted, there was no data
+     *                                  available.
+     *                                  Spontaneous or timed calls to the server or other source for more data should
+     *                                  only be made if this parameter is true. If false, no calls should be made to the server
      *                                  from this method. Instead initiate a manual call to the server via a
      *                                  <b>load-more</b> button or other UI element.
      */
-    public abstract void onScrollToBottom(int bottomIndex , boolean moreItemsCouldBeAvailable);
+    public abstract void onScrollToBottom(int bottomIndex, boolean moreItemsCouldBeAvailable);
+
     public abstract void onScrollAwayFromBottom(int currentIndex);
 
     /**
      * The network calls that updated the {@link EndlessAdapter}
+     *
      * @param moreItemsReceived If true, the adapter received updates.
      */
     public abstract void onFinishedLoading(boolean moreItemsReceived);
