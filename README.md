@@ -130,9 +130,10 @@ Calls from the client to the mock server causes the server to respond with a jso
 
 
 
-You can see the adapter in operation at:
+Below is the adapter in operation:
 
-https://youtu.be/E-Mi-GUu6Ks
+[![Watch the video](https://youtu.be/E-Mi-GUu6Ks)
+ 
 
 ![alt-text](https://github.com/gbenroscience/EndlessAdapter/blob/master/gitassets/ssc.gif)
 
