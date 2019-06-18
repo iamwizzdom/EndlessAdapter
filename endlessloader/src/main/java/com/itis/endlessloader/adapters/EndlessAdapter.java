@@ -18,7 +18,7 @@ import androidx.annotation.Nullable;
  */
 public abstract class EndlessAdapter<T> extends BaseAdapter {
 
-  protected List<T> items = new ArrayList<>();
+    protected List<T> items = new ArrayList<>();
     /**
      * If true, the last call that was made for data via {@link EndlessAdapter#loadMoreItems(List, AdapterView)}
      * returned data from the server.
@@ -27,10 +27,12 @@ public abstract class EndlessAdapter<T> extends BaseAdapter {
      * about data sources ability to at least have 1 unit of data by default, in general...lol
      *
      */
-  private boolean srcHadItemsAtLastCall = true;
+    private boolean srcHadItemsAtLastCall = true;
 
-  private boolean busyLoading;
+    private boolean busyLoading;
 
+
+    private boolean atBottom;
 
 
 
@@ -61,23 +63,26 @@ public abstract class EndlessAdapter<T> extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-       if(position == this.getCount() - 1){
-           if(!busyLoading) {
-               onScrollToBottom(position , srcHadItemsAtLastCall);
-               busyLoading = true;
-           }
-        }else{
-            AdapterView adapterView = (AdapterView) parent;
-            int count = adapterView.getCount();
-            if(adapterView.getLastVisiblePosition() == count - 1){
-                if(!busyLoading) {
-                    onScrollToBottom(count - 1 , srcHadItemsAtLastCall);
-                    busyLoading = true;
+        AdapterView adapterView = (AdapterView) parent;
+
+        int lastVisiblePosition = adapterView.getLastVisiblePosition();
+        int count = items.size();
+        if(position == count - 1 || lastVisiblePosition == count - 1){
+            if(!busyLoading) {
+                busyLoading = true;
+                onScrollToBottom(position , srcHadItemsAtLastCall);
+                if(!srcHadItemsAtLastCall){//The server call will trigger loadMoreItems which will set busyLoading to false if srcHadItemsAtLastCall = true.
+                    busyLoading=false;
                 }
-            }else {
+                atBottom = true;
+            }
+        }else if(position < count - 1){
+            if(atBottom){
                 onScrollAwayFromBottom(position);
             }
+            atBottom = false;
         }
+
 
         return convertView;
     }
@@ -94,6 +99,8 @@ public abstract class EndlessAdapter<T> extends BaseAdapter {
             notifyDataSetChanged();
         }
     }
+
+
 
 
     public void add(List<T> modelData) {
@@ -123,39 +130,39 @@ public abstract class EndlessAdapter<T> extends BaseAdapter {
      */
     public void loadMoreItems(final @Nullable List<T> moreItems , final AdapterView parent) {
 
-boolean updateDidCome = moreItems != null && !moreItems.isEmpty();
-      final int lastVisible = parent.getLastVisiblePosition();
+        boolean updateDidCome = moreItems != null && !moreItems.isEmpty();
+        final int lastVisible = parent.getLastVisiblePosition();
 
-      if(updateDidCome) {
-          srcHadItemsAtLastCall = true;
-          this.items.addAll(moreItems);
-          notifyDataSetChanged();
+        if(updateDidCome) {
+            srcHadItemsAtLastCall = true;
+            this.items.addAll(moreItems);
+            notifyDataSetChanged();
 
 
 //updates came, position the adapterview well, so user can consume updates.
 
-          parent.post(new Runnable() {
-              @Override
-              public void run() {
-                  parent.setSelection(lastVisible);
-                  onFinishedLoading(true );
-                  busyLoading = false;
-              }
-          });
+            parent.post(new Runnable() {
+                @Override
+                public void run() {
+                    parent.setSelection(lastVisible);
+                    onFinishedLoading(true );
+                    busyLoading=false;
+                }
+            });
 
 
-      }else{//No updates.
-          onFinishedLoading(false );
-          busyLoading = false;
-          srcHadItemsAtLastCall = false;
-      }
+        }else{//No updates.
+            onFinishedLoading(false );
+            busyLoading=false;
+            srcHadItemsAtLastCall = false;
+        }
 
 
     }
 
     public void clear(){
-     this.items.clear();
-     this.notifyDataSetChanged();
+        this.items.clear();
+        this.notifyDataSetChanged();
     }
 
     /**
