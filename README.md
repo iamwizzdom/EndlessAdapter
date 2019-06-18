@@ -52,10 +52,12 @@ public class BoysAdapter extends EndlessAdapter<Boy>{
             holder = (ViewHolder) convertView.getTag();
         }
 
-        Model model = getItem(position);
+        Boy boy = getItem(position);
 
         try {
-            holder.nameView.setText(model.getName());
+            holder.nameView.setText(boy.getName());
+            
+            ///Other data rendering codes.
 
         } catch (Exception e) {
             e.printStackTrace();
