@@ -134,7 +134,7 @@ You can see the adapter in operation at:
 
 https://youtu.be/E-Mi-GUu6Ks
 
-To add the adapter to your project:
+## Adding EndlessAdapter to your project:
  
 
 Add it in your root build.gradle at the end of repositories:
