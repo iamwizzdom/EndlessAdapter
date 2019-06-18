@@ -134,6 +134,8 @@ You can see the adapter in operation at:
 
 https://youtu.be/E-Mi-GUu6Ks
 
+![alt-text](https://github.com/gbenroscience/EndlessAdapter/blob/master/gitassets/ssc.gif)
+
 ## Adding EndlessAdapter to your project:
  
 
