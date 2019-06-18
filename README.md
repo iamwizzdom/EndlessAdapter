@@ -150,11 +150,11 @@ Add it in your root build.gradle at the end of repositories:
 
 
 Also add to your app's build.gradle file, under your dependencies, add:
-
+```
 dependencies {
 	        implementation 'com.github.gbenroscience:EndlessAdapter:0.1.1'
 	}
-
+```
 
 Thanks!
 
