@@ -121,8 +121,7 @@ When the user scrolls away from the bottom,  the ```onScrollAwayFromBottom``` is
 When the server has no more items you may wish to enable a load-more button, the example above also shows how to do that. The button is the ```loadMore``` variable in the above example. 
 
 
-For a complete example of the adapter in action, see:
-https://github.com/gbenroscience/EndlessAdapter/tree/master/app/src/main/java/com/itis/libs/examples.
+For a complete example of the adapter in action, [check here please](https://github.com/gbenroscience/EndlessAdapter/tree/master/app/src/main/java/com/itis/libs/examples).
 
 The example includes a Mock server which serves as a local source of data to the adapter.
 Calls from the client to the mock server causes the server to respond with a json array of names of great men/women; both past and present. The server is designed to at times mimic a no data situation. 
